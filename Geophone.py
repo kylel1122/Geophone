@@ -32,3 +32,15 @@ class Geophone():
     @property(float)
     def chanVoltage(self) -> float:
         return self.chan.voltage
+
+    @property(int)
+    def chanRaw(self) -> int:
+        return self.chan.value
+
+    @property(str)
+    def units(self) -> str:
+        return self._units
+
+    @units.setter(str)
+    def units(self, value->str):
+        self._units = value
