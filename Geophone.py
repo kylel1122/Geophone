@@ -22,7 +22,7 @@ class Geophone():
     
     @property(tuple[int, ...])
     def _validGains(self) -> tuple[int, ...]:
-        return {1, 2, 4, 8, 16}
+        return {2/3, 1, 2, 4, 8, 16}
 
     @property(int)
     def adcGain(self) -> int:
