@@ -4,11 +4,14 @@ import board
 import busio
 import time
 
+#TODO: create dictionary of conversion, units pairs
+
 class Geophone():
 
     def __init__():
         
         self.init_gadc()
+        self._conversion = 1 #mV
 
 
     def init_gadc(self):
@@ -31,7 +34,7 @@ class Geophone():
 
     @property(float)
     def chanVoltage(self) -> float:
-        return self.chan.voltage
+        return self.chan.voltage * self._conversion
 
     @property(int)
     def chanRaw(self) -> int:
@@ -43,4 +46,16 @@ class Geophone():
 
     @units.setter(str)
     def units(self, value->str):
-        self._units = value
+        VALID_UNITS = {'raw', 'mv', 'v'}
+        if value.lower() not in VALID_UNITS:
+            raise ValueError(f'Units value must be one of the following: {VALID_UNITS})')
+        else:
+            self._units = value
+
+    @property(int)
+    def unitConversion(self) -> int:
+        return self._conversion
+
+    @unitConversion.setter(int)
+    def unitConversion(self, value->int):
+        self._conversion = value
