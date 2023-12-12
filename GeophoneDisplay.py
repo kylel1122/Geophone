@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5 import QtWidgets
+import Seismograph
 
 class GeophoneDisplay(QMainWindow):
 
