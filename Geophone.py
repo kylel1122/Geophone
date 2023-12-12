@@ -19,6 +19,10 @@ class Geophone():
         i2c = busio.I2C(board.SCL, board.SDA)
         self.ads = ADS.ADS1115(i2c)
         self.chan = AnalogIn(ads, ADS.P1)
+    
+    @property(tuple[int, ...])
+    def _validGains(self) -> tuple[int, ...]:
+        return {1, 2, 4, 8, 16}
 
     @property(int)
     def adcGain(self) -> int:
@@ -26,8 +30,7 @@ class Geophone():
 
     @adsGain.setter(int)
     def adsGain(self, value: int):
-        VALID_GAINS = {1, 2, 4, 8, 16}
-        if value not in VALID_GAINS:
+        if value not in self.validGains:
             raise ValueError(f'Gain value must be one of the following: {VALID_GAINS}')
         else:
             self._gain = value
@@ -40,14 +43,17 @@ class Geophone():
     def chanRaw(self) -> int:
         return self.chan.value
 
+    @property(tuple[str, ...])
+    def validUnits(self) -> tuple[str, ...]:
+        return {'raw', 'mv', 'v'}
+
     @property(str)
     def units(self) -> str:
         return self._units
 
     @units.setter(str)
     def units(self, value->str):
-        VALID_UNITS = {'raw', 'mv', 'v'}
-        if value.lower() not in VALID_UNITS:
+        if value.lower() not in self.validUnits:
             raise ValueError(f'Units value must be one of the following: {VALID_UNITS})')
         else:
             self._units = value
@@ -59,3 +65,11 @@ class Geophone():
     @unitConversion.setter(int)
     def unitConversion(self, value->int):
         self._conversion = value
+
+    @property(float)
+    def sampleTime(self) -> float:
+        return self._sampleTime
+
+    @sampleTime.setter(float)
+    def sampleTime(self, value:float):
+        self._sampleTime(value)
