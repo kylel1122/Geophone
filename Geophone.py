@@ -5,6 +5,7 @@ import busio
 import time
 
 #TODO: create dictionary of conversion, units pairs
+#TODO: timestamp data
 
 class Geophone():
 
@@ -66,10 +67,19 @@ class Geophone():
     def unitConversion(self, value->int):
         self._conversion = value
 
-    @property(float)
-    def sampleTime(self) -> float:
+    @property(int)
+    def sampleTime(self) -> int:
+        # sample time in ms
         return self._sampleTime
 
     @sampleTime.setter(float)
     def sampleTime(self, value:float):
-        self._sampleTime(value)
+        self._sampleTime = value
+
+    def grabValue(self, sensorValue):
+        self.buffer = []
+        self.buffer.append(sensorValue)
+
+    @property(list[float, ...])
+    def buffer(self):
+        return self.buffer
