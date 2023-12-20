@@ -9,18 +9,20 @@ class Seismograph(pg.PlotWidget):
     pg.setConfigOption('background', 'w')
     pg.setConfigOption('foreground', 'k')
 
-    def __init__(self, update_time=1000, parent=None):
+    def __init__(self, update_time=2000, parent=None):
         super(Seismograph, self).__init__(parent)
         #TODO: set up geophone here I would think
         #      need to think about this
         self._updateTime = update_time
         self.sampleTime = 100 #ms
-        self.time = [0]
+        self.time = [time.time()]
         self.response = [0]
         self.timeBuffer = []
         self.responseBuffer = []
         self.setupPlot()
         self.setupTimer()
+
+        self.secondsInDay = 60 * 60 * 24
 
 
     def setupPlot(self):
@@ -46,9 +48,6 @@ class Seismograph(pg.PlotWidget):
                                      self.response,
                                      name='Response',
                                      pen=pen,
-                                     symbol='+',
-                                     symbolSize=15,
-                                     symbolBrush='b',
                                      )
 
 
@@ -85,11 +84,17 @@ class Seismograph(pg.PlotWidget):
         '''
         self.timeBuffer.append(time.time())
         self.responseBuffer.append(randint(20,40))
+        
         if len(self.responseBuffer) >= (self.updateTime/self.sampleTime):
-            self.time = self.time[len(self.timeBuffer):]
-            self.time = self.time + self.timeBuffer
-            self.response = self.response[len(self.responseBuffer):]
-            self.response = self.response + self.responseBuffer
+            if len(self.time) < self.secondsInDay:
+                self.time = self.time + self.timeBuffer
+                self.response = self.response + self.responseBuffer
+            else:
+                self.time = self.time[len(self.timeBuffer):]
+                self.time = self.time + self.timeBuffer
+                self.response = self.response[len(self.responseBuffer):]
+                self.response = self.response + self.responseBuffer
+
             self.line.setData(self.time, self.response)
             self.timeBuffer = []
             self.responseBuffer = []
