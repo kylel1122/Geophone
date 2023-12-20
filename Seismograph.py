@@ -106,3 +106,5 @@ class Seismograph(pg.PlotWidget):
         self.timer.timeout.connect(self.updatePlot)
         self.timer.start()
 
+    def changeTimerInterval(self):
+        pass
