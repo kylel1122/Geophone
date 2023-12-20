@@ -43,7 +43,7 @@ class GeophoneDisplay(QMainWindow):
         self.sampleTimeLabel = QLabel('Sample Time (s)')
         self.sampleTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.sampleTimeLineEdit = QLineEdit()
-        #self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
+        self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
 
         self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
         self.sampleTimeLayout.addWidget(self.sampleTimeLineEdit)
@@ -51,7 +51,7 @@ class GeophoneDisplay(QMainWindow):
         self.updateTimeLayout = QVBoxLayout()
         self.updateTimeLabel = QLabel('Update Time (s)')
         self.updateTimeLineEdit = QLineEdit()
-        #self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChanged)
+        self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChanged)
         
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
@@ -63,7 +63,7 @@ class GeophoneDisplay(QMainWindow):
         self.gainCombo = QComboBox()
         #self.gainCombo.addItems(list(self.geo.validGains))
         self.gainCombo.addItems(test_gains)
-        #self.gainCombo.currentTextChanged.connect(self.gainChange)
+        self.gainCombo.currentTextChanged.connect(self.gainChange)
         self.gainLayout.addWidget(self.gainLabel)
         self.gainLayout.addWidget(self.gainCombo)
 
@@ -73,6 +73,7 @@ class GeophoneDisplay(QMainWindow):
         self.controlsLayout.addLayout(self.gainLayout)
 
         self.mainLayout.addLayout(self.controlsLayout)
+
 
     def setupUI(self):
         #TODO: Right now, i have a lot of potential widgets, but with 
@@ -115,6 +116,15 @@ class GeophoneDisplay(QMainWindow):
         
         self.show()
     
+    def updateTimeChange(self):
+        pass
+
+    def sampleTimeChange(self):
+        pass
+
+    def gainChange(self):
+        pass
+
     def ui_filepath(self):
         return None
 
