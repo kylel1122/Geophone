@@ -1,19 +1,51 @@
 #import Geophone
-from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QGridLayout, QLineEdit, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QVBoxLayout, QHBoxLayout, QLineEdit, QMainWindow, QLabel, QPushButton, QWidget
 from PyQt5 import QtWidgets
-import Seismograph
+from Seismograph import Seismograph
 
 class GeophoneDisplay(QMainWindow):
 
-    def __init__(self, accessibility = True):
-        super(GeophoneDisplay, self).__init__()
+    def __init__(self, accessibility = True, parent=None):
+        super(GeophoneDisplay, self).__init__(parent)
+        self.Seismo = Seismograph()
         #self.geo = Geophone()
         
-        self.accessibility = accessibility
-        
-        self.setGeometry(200, 200, 300, 300)
+        # Found a problem with using QMainWindow. It already has its own 
+        # layout embedded within, and so we need to create a widget and
+        # then add our items to that widget
 
-        self.setupUI()
+        self._accessibility = accessibility
+        self.setWindowTitle('Seismograph Main Window')
+        self.setMinimumSize(725, 500)
+        self.widget = QWidget(self)
+        self.setCentralWidget(self.widget)
+        self.mainLayout = QVBoxLayout(self.widget)
+        #self.mainLayout = QVBoxLayout()
+        #self.setLayout(self.mainLayout)
+        
+        
+        self.setupPlots()
+        self.setupControls()
+
+        #self.setupUI()
+
+    def setupPlots(self):
+        self.seismoLayout = QHBoxLayout()
+        self.seismoLayout.addWidget(self.Seismo)
+        self.mainLayout.addLayout(self.seismoLayout)
+
+    def setupControls(self):
+        self.controlsLayout = QHBoxLayout(self.widget)
+        
+        test_gains = ['1', '2','3','4','5']
+        self.gainCombo = QComboBox()
+        #self.gainCombo.addItems(list(self.geo.validGains))
+        self.gainCombo.addItems(test_gains)
+        #self.gainCombo.currentTextChanged.connect(self.gainChange)
+
+        self.controlsLayout.addWidget(self.gainCombo)
+
+        self.mainLayout.addLayout(self.controlsLayout)
 
     def setupUI(self):
         #TODO: Right now, i have a lot of potential widgets, but with 
@@ -55,6 +87,9 @@ class GeophoneDisplay(QMainWindow):
         self.resetWindowBtn = QPushButton()
         
         self.show()
+    
+    def ui_filepath(self):
+        return None
 
         # TODO: slider to see back throughout the day or zoom in and out
 '''
@@ -65,3 +100,9 @@ class GeophoneDisplay(QMainWindow):
         self.geo.sampleTime(float(self.sampleTime.currentText()))
         '''
         
+
+
+app = QtWidgets.QApplication([])
+main = GeophoneDisplay()
+main.show()
+app.exec()
