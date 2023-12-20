@@ -3,10 +3,10 @@ from PyQt5 import QtCore, QtWidgets
 from random import randint
 #import Geophone
 
-pg.setConfigOption('background', 'w')
-pg.setConfigOption('foreground', 'k')
 
 class Seismograph(pg.PlotWidget):
+    pg.setConfigOption('background', 'w')
+    pg.setConfigOption('foreground', 'k')
 
     def __init__(self, update_time=1000, parent=None):
         super(Seismograph, self).__init__(parent)
@@ -90,7 +90,3 @@ class Seismograph(pg.PlotWidget):
         self.timer.timeout.connect(self.updatePlot)
         self.timer.start()
 
-app = QtWidgets.QApplication([])
-main = Seismograph()
-main.show()
-app.exec()
