@@ -1,5 +1,5 @@
-import Geophone
-from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QGridLayout, QLineEdit QMainWindow, QLabel, QPushButton
+#import Geophone
+from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QGridLayout, QLineEdit, QMainWindow, QLabel, QPushButton
 from PyQt5 import QtWidgets
 import Seismograph
 

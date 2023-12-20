@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 from PyQt5 import QtCore
-import Geophone
+#import Geophone
 
 class Seismograph(pg.PlotWidget):
 
@@ -8,17 +8,17 @@ class Seismograph(pg.PlotWidget):
         super(Seismograph, self).__init__(parent)
         #TODO: set up geophone here I would think
         #      need to think about this
-        self._updateTime = 1.0
+        self.updateTime(1.0)
 
-    @property(int)
-    def updateTime(self) -> int:
+    @property
+    def updateTime(self) -> float:
         return self._updateTime
 
-    @updateTime.setter(int)
+    @updateTime.setter
     def updateTime(self, value:int):
         self._updateTime = value
 
-    @property(int)
+    @property
     def updateLength(self):
         return int(self.updateTime / self.geo.sampleTime)
 

@@ -21,58 +21,58 @@ class Geophone():
         self.ads = ADS.ADS1115(i2c)
         self.chan = AnalogIn(ads, ADS.P1)
     
-    @property(tuple[int, ...])
+    @property
     def _validGains(self) -> tuple[int, ...]:
         return {2/3, 1, 2, 4, 8, 16}
 
-    @property(int)
+    @property
     def adcGain(self) -> int:
         return self._gain
 
-    @adsGain.setter(int)
+    @adsGain.setter
     def adsGain(self, value: int):
         if value not in self.validGains:
             raise ValueError(f'Gain value must be one of the following: {VALID_GAINS}')
         else:
             self._gain = value
 
-    @property(float)
+    @property
     def chanVoltage(self) -> float:
         return self.chan.voltage * self._conversion
 
-    @property(int)
+    @property
     def chanRaw(self) -> int:
         return self.chan.value
 
-    @property(tuple[str, ...])
+    @property
     def validUnits(self) -> tuple[str, ...]:
         return {'raw', 'mv', 'v'}
 
-    @property(str)
+    @property
     def units(self) -> str:
         return self._units
 
-    @units.setter(str)
-    def units(self, value->str):
+    @units.setter
+    def units(self, value:str):
         if value.lower() not in self.validUnits:
             raise ValueError(f'Units value must be one of the following: {VALID_UNITS})')
         else:
             self._units = value
 
-    @property(int)
+    @property
     def unitConversion(self) -> int:
         return self._conversion
 
-    @unitConversion.setter(int)
-    def unitConversion(self, value->int):
+    @unitConversion.setter
+    def unitConversion(self, value:int):
         self._conversion = value
 
-    @property(int)
+    @property
     def sampleTime(self) -> int:
         # sample time in ms
         return self._sampleTime
 
-    @sampleTime.setter(float)
+    @sampleTime.setter
     def sampleTime(self, value:float):
         self._sampleTime = value
 
@@ -80,6 +80,6 @@ class Geophone():
         self.buffer = []
         self.buffer.append(sensorValue)
 
-    @property(list[float, ...])
+    @property
     def buffer(self):
         return self.buffer
