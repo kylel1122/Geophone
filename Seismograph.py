@@ -107,4 +107,10 @@ class Seismograph(pg.PlotWidget):
         self.timer.start()
 
     def changeTimerInterval(self):
-        pass
+        '''
+        Toggle the timer and reset the interval
+        '''
+
+        self.timer.stop()
+        self.timer.setInterval(int(self.sampleTime))
+        self.timer.start()
