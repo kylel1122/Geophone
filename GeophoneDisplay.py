@@ -1,6 +1,6 @@
 #import Geophone
-from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QVBoxLayout, QHBoxLayout, QLineEdit, QMainWindow, QLabel, QPushButton, QWidget
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QVBoxLayout, QHBoxLayout, QLineEdit, QMainWindow, QLabel, QPushButton, QWidget, QSpacerItem, QSizePolicy
+from PyQt5 import QtCore, QtWidgets
 from Seismograph import Seismograph
 
 class GeophoneDisplay(QMainWindow):
@@ -35,15 +35,42 @@ class GeophoneDisplay(QMainWindow):
         self.mainLayout.addLayout(self.seismoLayout)
 
     def setupControls(self):
-        self.controlsLayout = QHBoxLayout(self.widget)
+        self.controlsLayout = QHBoxLayout()
         
+        horizontalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding)
+
+        self.sampleTimeLayout = QVBoxLayout()
+        self.sampleTimeLabel = QLabel('Sample Time (s)')
+        self.sampleTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.sampleTimeLineEdit = QLineEdit()
+        #self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
+
+        self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
+        self.sampleTimeLayout.addWidget(self.sampleTimeLineEdit)
+
+        self.updateTimeLayout = QVBoxLayout()
+        self.updateTimeLabel = QLabel('Update Time (s)')
+        self.updateTimeLineEdit = QLineEdit()
+        #self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChanged)
+        
+        self.updateTimeLayout.addWidget(self.updateTimeLabel)
+        self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
+
+        self.gainLayout = QVBoxLayout()
+        self.gainLabel = QLabel('ADC Gain:')
+        self.gainLabel.setAlignment(QtCore.Qt.AlignCenter)
         test_gains = ['1', '2','3','4','5']
         self.gainCombo = QComboBox()
         #self.gainCombo.addItems(list(self.geo.validGains))
         self.gainCombo.addItems(test_gains)
         #self.gainCombo.currentTextChanged.connect(self.gainChange)
+        self.gainLayout.addWidget(self.gainLabel)
+        self.gainLayout.addWidget(self.gainCombo)
 
-        self.controlsLayout.addWidget(self.gainCombo)
+        self.controlsLayout.addItem(horizontalSpacer)
+        self.controlsLayout.addLayout(self.sampleTimeLayout)
+        self.controlsLayout.addLayout(self.updateTimeLayout)
+        self.controlsLayout.addLayout(self.gainLayout)
 
         self.mainLayout.addLayout(self.controlsLayout)
 
