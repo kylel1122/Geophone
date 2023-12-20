@@ -58,7 +58,10 @@ class Seismograph(pg.PlotWidget):
 
     @updateTime.setter
     def updateTime(self, value:int):
-        self._updateTime = value
+        '''
+        Convert to milliseconds because Qt.Timer expects milliseconds
+        '''
+        self._updateTime = value * 1000
 
     @property
     def updateLength(self):
