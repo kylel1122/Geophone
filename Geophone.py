@@ -69,12 +69,13 @@ class Geophone():
 
     @property
     def sampleTime(self) -> int:
-        # sample time in ms
+        # sample time in seconds
         return self._sampleTime
 
     @sampleTime.setter
     def sampleTime(self, value:float):
-        self._sampleTime = value
+        # set time in milliseconds and convert to seconds
+        self._sampleTime = value * 1000
 
     def grabValue(self, sensorValue):
         self.buffer = []
