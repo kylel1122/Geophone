@@ -1,6 +1,7 @@
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
 from random import randint
+import time
 #import Geophone
 
 
@@ -13,6 +14,11 @@ class Seismograph(pg.PlotWidget):
         #TODO: set up geophone here I would think
         #      need to think about this
         self._updateTime = update_time
+        self.sampleTime = 100 #ms
+        self.time = [0]
+        self.response = [0]
+        self.timeBuffer = []
+        self.responseBuffer = []
         self.setupPlot()
         self.setupTimer()
 
@@ -33,8 +39,8 @@ class Seismograph(pg.PlotWidget):
         self.seismo.showGrid(x=True, y=True)
         self.seismo.setYRange(gain, -1*gain)
 
-        self.time = list(range(10))
-        self.response = [randint(0, 40) for _ in range(10)]
+        #self.time = list(range(10))
+        #self.response = [randint(0, 40) for _ in range(10)]
 
         self.line = self.seismo.plot(self.time,
                                      self.response,
@@ -48,7 +54,7 @@ class Seismograph(pg.PlotWidget):
 
 
     @property
-    def updateTime(self) -> float:
+    def updateTime(self) -> int:
         return self._updateTime
 
     @updateTime.setter
@@ -77,16 +83,21 @@ class Seismograph(pg.PlotWidget):
             self.seisPlot = self.seisPlot[self.updateLength:]
             self.seisPlot.append(self.seisBuffer)
         '''
-        self.time = self.time[1:]
-        self.time.append(self.time[-1] +1)
-        self.response = self.response[1:]
-        self.response.append(randint(20,40))
-        self.line.setData(self.time, self.response)
+        self.timeBuffer.append(time.time())
+        self.responseBuffer.append(randint(20,40))
+        if len(self.responseBuffer) >= (self.updateTime/self.sampleTime):
+            self.time = self.time[len(self.timeBuffer):]
+            self.time = self.time + self.timeBuffer
+            self.response = self.response[len(self.responseBuffer):]
+            self.response = self.response + self.responseBuffer
+            self.line.setData(self.time, self.response)
+            self.timeBuffer = []
+            self.responseBuffer = []
 
     def setupTimer(self):
 
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(int(self.updateTime))
+        self.timer.setInterval(int(self.sampleTime))
         self.timer.timeout.connect(self.updatePlot)
         self.timer.start()
 
