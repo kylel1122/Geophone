@@ -51,7 +51,7 @@ class GeophoneDisplay(QMainWindow):
         self.updateTimeLayout = QVBoxLayout()
         self.updateTimeLabel = QLabel('Update Time (s)')
         self.updateTimeLineEdit = QLineEdit()
-        self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChanged)
+        self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChange)
         
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
