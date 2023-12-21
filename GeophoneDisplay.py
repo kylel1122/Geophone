@@ -68,20 +68,22 @@ class GeophoneDisplay(QMainWindow):
         self.gainLayout.addWidget(self.gainLabel)
         self.gainLayout.addWidget(self.gainCombo)
 
-        self.startLayout = QVBoxLayout()
+        self.buttonLayout = QVBoxLayout()
         self.startButton = QPushButton('Start/Stop')
         self.startButton.setCheckable(True)
         self.startButton.clicked.connect(self.startChange)
 
+        self.saveButton = QPushButton('Save Last 24hr')
+        self.saveButton.clicked.connect(self.saveChange)
         #self.startLayout.addItem(verticalSpacer)
-        self.startLayout.addWidget(self.startButton)
-        self.startLayout.addItem(verticalSpacer)
+        self.buttonLayout.addWidget(self.startButton)
+        self.buttonLayout.addWidget(self.saveButton)
 
         self.controlsLayout.addItem(horizontalSpacer)
-        self.controlsLayout.addLayout(self.startLayout)
         self.controlsLayout.addLayout(self.sampleTimeLayout)
         self.controlsLayout.addLayout(self.updateTimeLayout)
         self.controlsLayout.addLayout(self.gainLayout)
+        self.controlsLayout.addLayout(self.buttonLayout)
 
         self.mainLayout.addLayout(self.controlsLayout)
 
@@ -141,6 +143,9 @@ class GeophoneDisplay(QMainWindow):
             self.Seismo.timer.stop()
         else:
             self.Seismo.timer.start()
+
+    def saveChange(self):
+        pass
 
     def ui_filepath(self):
         return None
