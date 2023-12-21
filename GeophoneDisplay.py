@@ -38,6 +38,7 @@ class GeophoneDisplay(QMainWindow):
         self.controlsLayout = QHBoxLayout()
         
         horizontalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding)
+        verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding)
 
         self.sampleTimeLayout = QVBoxLayout()
         self.sampleTimeLabel = QLabel('Sample Time (s)')
@@ -67,7 +68,17 @@ class GeophoneDisplay(QMainWindow):
         self.gainLayout.addWidget(self.gainLabel)
         self.gainLayout.addWidget(self.gainCombo)
 
+        self.startLayout = QVBoxLayout()
+        self.startButton = QPushButton('Start/Stop')
+        self.startButton.setCheckable(True)
+        self.startButton.clicked.connect(self.startChange)
+
+        #self.startLayout.addItem(verticalSpacer)
+        self.startLayout.addWidget(self.startButton)
+        self.startLayout.addItem(verticalSpacer)
+
         self.controlsLayout.addItem(horizontalSpacer)
+        self.controlsLayout.addLayout(self.startLayout)
         self.controlsLayout.addLayout(self.sampleTimeLayout)
         self.controlsLayout.addLayout(self.updateTimeLayout)
         self.controlsLayout.addLayout(self.gainLayout)
@@ -123,6 +134,9 @@ class GeophoneDisplay(QMainWindow):
         pass
 
     def gainChange(self):
+        pass
+
+    def startChange(self):
         pass
 
     def ui_filepath(self):
