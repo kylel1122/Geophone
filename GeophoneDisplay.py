@@ -130,10 +130,13 @@ class GeophoneDisplay(QMainWindow):
         self.show()
     
     def updateTimeChange(self):
-        pass
+        self.Seismo.updateTime = float(self.updateTimeLineEdit.text())
 
     def sampleTimeChange(self):
-        pass
+        self.Seismo.sampleTime = float(self.sampleTimeLineEdit.text())
+        print(self.sampleTimeLineEdit.text())
+        self.Seismo.changeTimerInterval()
+
 
     def gainChange(self):
         pass

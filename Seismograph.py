@@ -9,12 +9,12 @@ class Seismograph(pg.PlotWidget):
     pg.setConfigOption('background', 'w')
     pg.setConfigOption('foreground', 'k')
 
-    def __init__(self, update_time=2000, parent=None):
+    def __init__(self, update_time=2, parent=None):
         super(Seismograph, self).__init__(parent)
         #TODO: set up geophone here I would think
         #      need to think about this
-        self._updateTime = update_time
-        self.sampleTime = 100 #ms
+        self.updateTime = update_time
+        self.sampleTime = 0.1 #ms
         self.time = [time.time()]
         self.response = [0]
         self.timeBuffer = []
@@ -57,11 +57,22 @@ class Seismograph(pg.PlotWidget):
         return self._updateTime
 
     @updateTime.setter
-    def updateTime(self, value:int):
+    def updateTime(self, value:float):
         '''
         Convert to milliseconds because Qt.Timer expects milliseconds
         '''
         self._updateTime = value * 1000
+
+    @property
+    def sampleTime(self) -> int:
+        return self._sampleTime
+
+    @sampleTime.setter
+    def sampleTime(self, value:float):
+        '''
+        Convert to milliseconds because Qt.Timer expects milliseconds
+        '''
+        self._sampleTime = value * 1000
 
     @property
     def updateLength(self):
@@ -92,6 +103,7 @@ class Seismograph(pg.PlotWidget):
             if len(self.time) < self.secondsInDay:
                 self.time = self.time + self.timeBuffer
                 self.response = self.response + self.responseBuffer
+                print(len(self.time), len(self.response))
             else:
                 self.time = self.time[len(self.timeBuffer):]
                 self.time = self.time + self.timeBuffer
