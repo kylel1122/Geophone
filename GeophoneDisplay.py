@@ -137,7 +137,10 @@ class GeophoneDisplay(QMainWindow):
         pass
 
     def startChange(self):
-        pass
+        if self.Seismo.timer.isActive():
+            self.Seismo.timer.stop()
+        else:
+            self.Seismo.timer.start()
 
     def ui_filepath(self):
         return None
