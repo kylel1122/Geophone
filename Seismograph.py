@@ -88,8 +88,12 @@ class Seismograph(pg.PlotWidget):
         self._sampleTime = value * 1000
 
     @property
-    def updateLength(self):
-        return int(self.updateTime / self.geo.sampleTime)
+    def samplesPerUpdate(self) -> int:
+        return (self.updateTime / self.sampleTime)
+
+    @property
+    def totalSamples(self):
+        return len(self.time)
 
     def updatePlot(self):
         # My thoughts here are:
@@ -128,7 +132,7 @@ class Seismograph(pg.PlotWidget):
 
     def setupTimer(self):
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(int(self.sampleTime))
+        self.timer.setInterval(self.sampleTime)
         self.timer.timeout.connect(self.updatePlot)
         self.timer.start()
 
@@ -137,5 +141,5 @@ class Seismograph(pg.PlotWidget):
         Toggle the timer and reset the interval
         '''
         self.timer.stop()
-        self.timer.setInterval(int(self.sampleTime))
+        self.timer.setInterval(self.sampleTime)
         self.timer.start()
