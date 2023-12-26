@@ -13,6 +13,8 @@
 #   Modified:
 #
 #   TODO:
+#       * Add saving feature
+#       * Implement accessibility
 #
 #   NOTE:
 ##########################################################
@@ -39,8 +41,6 @@ class GeophoneDisplay(QMainWindow):
         self.widget = QWidget(self)
         self.setCentralWidget(self.widget)
         self.mainLayout = QVBoxLayout(self.widget)
-        #self.mainLayout = QVBoxLayout()
-        #self.setLayout(self.mainLayout)
         
         
         self.setupPlots()
