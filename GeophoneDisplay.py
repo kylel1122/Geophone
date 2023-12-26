@@ -5,7 +5,7 @@ from Seismograph import Seismograph
 
 class GeophoneDisplay(QMainWindow):
 
-    def __init__(self, accessibility = True, parent=None):
+    def __init__(self, mode=0, accessibility=True, parent=None):
         super(GeophoneDisplay, self).__init__(parent)
         self.Seismo = Seismograph()
         #self.geo = Geophone()
@@ -13,8 +13,8 @@ class GeophoneDisplay(QMainWindow):
         # Found a problem with using QMainWindow. It already has its own 
         # layout embedded within, and so we need to create a widget and
         # then add our items to that widget
-
-        self._accessibility = accessibility
+        self.mode = mode
+        self.accessibility = accessibility
         self.setWindowTitle('Seismograph Main Window')
         self.setMinimumSize(725, 500)
         self.widget = QWidget(self)
@@ -28,6 +28,22 @@ class GeophoneDisplay(QMainWindow):
         self.setupControls()
 
         #self.setupUI()
+
+    @property
+    def accessibility(self) -> bool:
+        return self._accessibility
+
+    @accessibility.setter
+    def accessibility(self, value:bool):
+        self._accessibility = value
+
+    @property
+    def mode(self) -> bool:
+        return self.mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
 
     def setupPlots(self):
         self.seismoLayout = QHBoxLayout()
