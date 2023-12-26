@@ -109,7 +109,7 @@ class GeophoneDisplay(QMainWindow):
         self.gainLayout = QVBoxLayout()
         self.gainLabel = QLabel('ADC Gain:')
         self.gainLabel.setAlignment(QtCore.Qt.AlignCenter)
-        if mode = 0:
+        if self.mode == 0:
             gains = ['1', '2','3','4','5']
         self.gainCombo = QComboBox()
         #self.gainCombo.addItems(list(self.geo.validGains))
