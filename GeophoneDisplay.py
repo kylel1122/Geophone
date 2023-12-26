@@ -46,6 +46,8 @@ class GeophoneDisplay(QMainWindow):
         self.setupPlots()
         self.setupControls()
 
+        self.setupStatsTimer()
+
         #self.setupUI()
 
     @property
@@ -88,9 +90,10 @@ class GeophoneDisplay(QMainWindow):
 
         # Sample Time Label and LineEdit Setup
         self.sampleTimeLayout = QVBoxLayout()
-        self.sampleTimeLabel = QLabel('Sample Time (s)')
+        self.sampleTimeLabel = QLabel('Sample Time (s):')
         self.sampleTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.sampleTimeLineEdit = QLineEdit()
+        self.sampleTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
 
         self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
@@ -98,12 +101,33 @@ class GeophoneDisplay(QMainWindow):
 
         # Update Time Label and LineEdit Setup
         self.updateTimeLayout = QVBoxLayout()
-        self.updateTimeLabel = QLabel('Update Time (s)')
+        self.updateTimeLabel = QLabel('Update Time (s):')
+        self.updateTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.updateTimeLineEdit = QLineEdit()
+        self.updateTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChange)
         
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
+
+        # Samples Per Update
+        self.samplesPerUpdateLayout = QVBoxLayout()
+        self.samplesPerUpdateLabel = QLabel('Samples Per Update:')
+        self.samplesPerUpdateLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.samplesPerUpdateCalc = QLabel()
+        self.samplesPerUpdateCalc.setAlignment(QtCore.Qt.AlignCenter)
+        
+        self.samplesPerUpdateLayout.addWidget(self.samplesPerUpdateLabel)
+        self.samplesPerUpdateLayout.addWidget(self.samplesPerUpdateCalc)
+
+        self.totalSamplesLayout = QVBoxLayout()
+        self.totalSamplesLabel = QLabel('Total Samples:')
+        self.totalSamplesLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.totalSamplesCalc = QLabel()
+        self.totalSamplesCalc.setAlignment(QtCore.Qt.AlignCenter)
+        
+        self.totalSamplesLayout.addWidget(self.totalSamplesLabel)
+        self.totalSamplesLayout.addWidget(self.totalSamplesCalc)
 
         # ADC Gain Label and ComboBox Setup 
         self.gainLayout = QVBoxLayout()
@@ -135,6 +159,8 @@ class GeophoneDisplay(QMainWindow):
         self.controlsLayout.addItem(horizontalSpacer)
         self.controlsLayout.addLayout(self.sampleTimeLayout)
         self.controlsLayout.addLayout(self.updateTimeLayout)
+        self.controlsLayout.addLayout(self.samplesPerUpdateLayout)
+        self.controlsLayout.addLayout(self.totalSamplesLayout)
         self.controlsLayout.addLayout(self.gainLayout)
         self.controlsLayout.addLayout(self.buttonLayout)
 
@@ -142,11 +168,17 @@ class GeophoneDisplay(QMainWindow):
 
     def updateTimeChange(self):
         self.Seismo.updateTime = float(self.updateTimeLineEdit.text())
+        self.changeStatsTimerInterval()
 
     def sampleTimeChange(self):
         self.Seismo.sampleTime = float(self.sampleTimeLineEdit.text())
         self.Seismo.changeTimerInterval()
 
+    def updateSamplesPerUpdate(self):
+        self.samplesPerUpdateCalc.setText(str(self.Seismo.samplesPerUpdate))
+
+    def updateTotalSamples(self):
+        self.totalSamplesCalc.setText(str(self.Seismo.totalSamples))
 
     def gainChange(self):
         pass
@@ -159,6 +191,20 @@ class GeophoneDisplay(QMainWindow):
 
     def saveChange(self):
         pass
+
+    def setupStatsTimer(self):
+        self.statsTimer = QtCore.QTimer()
+        self.statsTimer.setInterval(self.Seismo.updateTime)
+        self.statsTimer.timeout.connect(self.updateStats)
+        self.statsTimer.start()
+
+    def changeStatsTimerInterval(self):
+        self.statsTimer.stop()
+        self.statsTimer.setInterval(self.Seismo.updateTime)
+        self.statsTimer.start()
+
+    def updateStats(self):
+        self.updateTotalSamples()
 
     def ui_filepath(self):
         return None
