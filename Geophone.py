@@ -1,3 +1,36 @@
+#! /usr/bin/env python
+
+##########################################################
+# Geophone.py
+#
+# A Raspberry Pi piezoelectric flow meter test stand.
+# The setup is as follows:
+#   (1) ultrasonic flow meter is driven by PWM at its
+#       resonance frequency.
+#   (1) ultrasonic flow meter is in receiving mode 
+#       (refer to README.md for wiring diagram).
+#
+#   Created: 12/10/23
+#       - Kyle Leleux
+#
+#   Modified:
+#
+#   TODO:
+#
+#   NOTE:
+#       1) The ADS1015 and ADS1115 both have the same gain options.
+#          
+#                GAIN    RANGE (V)
+#                ----    ---------
+#                 2/3    +/- 6.144
+#                   1    +/- 4.096
+#                   2    +/- 2.048
+#                   4    +/- 1.024
+#                   8    +/- 0.512
+#                  16    +/- 0.256
+#          
+##########################################################
+
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x14.analog_in import AnalogIn
 import board
@@ -22,7 +55,7 @@ class Geophone():
         self.chan = AnalogIn(ads, ADS.P1)
     
     @property
-    def _validGains(self) -> tuple[int, ...]:
+    def _validGains(self) -> tuple[float, int, int, int, int, int]:
         return {2/3, 1, 2, 4, 8, 16}
 
     @property
@@ -66,11 +99,3 @@ class Geophone():
     @unitConversion.setter
     def unitConversion(self, value:int):
         self._conversion = value
-
-    def grabValue(self, sensorValue):
-        self.buffer = []
-        self.buffer.append(sensorValue)
-
-    @property
-    def buffer(self):
-        return self.buffer
