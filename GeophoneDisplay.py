@@ -1,3 +1,22 @@
+#! /usr/bin/env python
+
+##########################################################
+# GeophoneDisplay.py
+#
+#   A PyQT5 display that uses a Raspberry Pi that utilizes
+#   an ADS1115 breakout board and a SM-24 geophone to 
+#   work as a seismograph.
+#
+#   Created: 12/15/23
+#       - Kyle Leleux
+#
+#   Modified:
+#
+#   TODO:
+#
+#   NOTE:
+##########################################################
+
 #import Geophone
 from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QVBoxLayout, QHBoxLayout, QLineEdit, QMainWindow, QLabel, QPushButton, QWidget, QSpacerItem, QSizePolicy
 from PyQt5 import QtCore, QtWidgets
@@ -31,6 +50,12 @@ class GeophoneDisplay(QMainWindow):
 
     @property
     def accessibility(self) -> bool:
+        '''
+        The intended use of this display is for an elderly gentleman. As 
+        such, I want to add an option that increases the font size and general
+        size of the display. I also want to do more research about what it 
+        takes to design for accessibility (colorblindness, etc)
+        '''
         return self._accessibility
 
     @accessibility.setter
@@ -39,7 +64,12 @@ class GeophoneDisplay(QMainWindow):
 
     @property
     def mode(self) -> bool:
-        return self.mode
+        '''
+        The following modes are available:
+            * 0 -> simulated (reading random values)
+            * 1 -> running (reading ADS1115 and Geophone)
+        '''
+        return self._mode
 
     @mode.setter
     def mode(self, value):
@@ -56,6 +86,7 @@ class GeophoneDisplay(QMainWindow):
         horizontalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding)
         verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding)
 
+        # Sample Time Label and LineEdit Setup
         self.sampleTimeLayout = QVBoxLayout()
         self.sampleTimeLabel = QLabel('Sample Time (s)')
         self.sampleTimeLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -65,6 +96,7 @@ class GeophoneDisplay(QMainWindow):
         self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
         self.sampleTimeLayout.addWidget(self.sampleTimeLineEdit)
 
+        # Update Time Label and LineEdit Setup
         self.updateTimeLayout = QVBoxLayout()
         self.updateTimeLabel = QLabel('Update Time (s)')
         self.updateTimeLineEdit = QLineEdit()
@@ -73,28 +105,33 @@ class GeophoneDisplay(QMainWindow):
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
 
+        # ADC Gain Label and ComboBox Setup 
         self.gainLayout = QVBoxLayout()
         self.gainLabel = QLabel('ADC Gain:')
         self.gainLabel.setAlignment(QtCore.Qt.AlignCenter)
-        test_gains = ['1', '2','3','4','5']
+        if mode = 0:
+            gains = ['1', '2','3','4','5']
         self.gainCombo = QComboBox()
         #self.gainCombo.addItems(list(self.geo.validGains))
-        self.gainCombo.addItems(test_gains)
+        self.gainCombo.addItems(gains)
         self.gainCombo.currentTextChanged.connect(self.gainChange)
         self.gainLayout.addWidget(self.gainLabel)
         self.gainLayout.addWidget(self.gainCombo)
 
+        # Start/Stop Button Setup
         self.buttonLayout = QVBoxLayout()
         self.startButton = QPushButton('Start/Stop')
         self.startButton.setCheckable(True)
         self.startButton.clicked.connect(self.startChange)
 
+        # Save Button Setup
         self.saveButton = QPushButton('Save Last 24hr')
         self.saveButton.clicked.connect(self.saveChange)
         #self.startLayout.addItem(verticalSpacer)
         self.buttonLayout.addWidget(self.startButton)
         self.buttonLayout.addWidget(self.saveButton)
 
+        # Layout Setup
         self.controlsLayout.addItem(horizontalSpacer)
         self.controlsLayout.addLayout(self.sampleTimeLayout)
         self.controlsLayout.addLayout(self.updateTimeLayout)
@@ -103,54 +140,11 @@ class GeophoneDisplay(QMainWindow):
 
         self.mainLayout.addLayout(self.controlsLayout)
 
-
-    def setupUI(self):
-        #TODO: Right now, i have a lot of potential widgets, but with 
-        #      no idea on how I should lay them out. Figure that out.
-        self.setWindowTitle('Seismograph Main Window')
-
-        self.layout = QGridLayout()
-
-        # Setting up some widgets I think I will need without much else thought for right now
-        
-        self.gainCombo = QComboBox()
-        self.setLayout(layout)
-
-        # TODO: Need to do something with this value once it is set
-        self.gainCombo.addItems(list(self.geo.validGains))
-        self.gainCombo.currentTextChanged.connect(self.gainChange)
-        
-        self.readingLabel = QLabel()
-        
-        self.sampleTime = QLineEdit()
-        self.sampleTime.returnPressed.connect(self.sampleTimeChange)
-
-        self.sampleTimeRBV = QLabel()
-        
-        layout.addWidget(self.readingLabel, 0, 0, 2)
-        layout.addWidget(self.sampleTime, 1, 0)
-        layout.addWidget(self.sampleTimeRBV, 1, 1)
-
-
-        
-
-        self.startBtn = QPushButton()
-
-
-        self.saveLast24Btn = QPushButton()
-        # TODO: Move these to pyqt graph widget probably
-        self.zoomInBtn = QPushButton()
-        self.zoomOutBtn = QPushButton()
-        self.resetWindowBtn = QPushButton()
-        
-        self.show()
-    
     def updateTimeChange(self):
         self.Seismo.updateTime = float(self.updateTimeLineEdit.text())
 
     def sampleTimeChange(self):
         self.Seismo.sampleTime = float(self.sampleTimeLineEdit.text())
-        print(self.sampleTimeLineEdit.text())
         self.Seismo.changeTimerInterval()
 
 
