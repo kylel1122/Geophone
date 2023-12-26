@@ -1,3 +1,21 @@
+#! /usr/bin/env python
+
+##########################################################
+# Seismograph.py
+#
+#   A pyqtgraph object used to display voltage readings
+#
+#   Created: 12/10/23
+#       - Kyle Leleux
+#
+#   Modified:
+#
+#   TODO:
+#
+#   NOTE:
+#          
+##########################################################
+
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
 from random import randint
@@ -11,12 +29,10 @@ class Seismograph(pg.PlotWidget):
 
     def __init__(self, update_time=2, parent=None):
         super(Seismograph, self).__init__(parent)
-        #TODO: set up geophone here I would think
-        #      need to think about this
         self.updateTime = update_time
         self.sampleTime = 0.1 #ms
-        self.time = [time.time()]
-        self.response = [0]
+        self.time = []
+        self.response = []
         self.timeBuffer = []
         self.responseBuffer = []
         self.setupPlot()
@@ -40,9 +56,6 @@ class Seismograph(pg.PlotWidget):
         self.seismo.addLegend()
         self.seismo.showGrid(x=True, y=True)
         self.seismo.setYRange(gain, -1*gain)
-
-        #self.time = list(range(10))
-        #self.response = [randint(0, 40) for _ in range(10)]
 
         self.line = self.seismo.plot(self.time,
                                      self.response,
@@ -103,7 +116,6 @@ class Seismograph(pg.PlotWidget):
             if len(self.time) < self.secondsInDay:
                 self.time = self.time + self.timeBuffer
                 self.response = self.response + self.responseBuffer
-                print(len(self.time), len(self.response))
             else:
                 self.time = self.time[len(self.timeBuffer):]
                 self.time = self.time + self.timeBuffer
@@ -115,7 +127,6 @@ class Seismograph(pg.PlotWidget):
             self.responseBuffer = []
 
     def setupTimer(self):
-
         self.timer = QtCore.QTimer()
         self.timer.setInterval(int(self.sampleTime))
         self.timer.timeout.connect(self.updatePlot)
@@ -125,7 +136,6 @@ class Seismograph(pg.PlotWidget):
         '''
         Toggle the timer and reset the interval
         '''
-
         self.timer.stop()
         self.timer.setInterval(int(self.sampleTime))
         self.timer.start()
