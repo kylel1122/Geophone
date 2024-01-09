@@ -16,11 +16,11 @@
 #          
 ##########################################################
 
+from Geophone import Geophone
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
 from random import randint
 import time
-#import Geophone
 
 
 class Seismograph(pg.PlotWidget):
@@ -29,6 +29,7 @@ class Seismograph(pg.PlotWidget):
 
     def __init__(self, update_time=2, parent=None):
         super(Seismograph, self).__init__(parent)
+        self.Geo = Geophone()
         self.updateTime = update_time
         self.sampleTime = 0.1 #ms
         self.time = []
@@ -55,7 +56,7 @@ class Seismograph(pg.PlotWidget):
         self.seismo.setLabel('bottom', f'Time (s)', **styles)
         self.seismo.addLegend()
         self.seismo.showGrid(x=True, y=True)
-        self.seismo.setYRange(gain, -1*gain)
+        self.seismo.setYRange(0.256, -1*0.256)
 
         self.line = self.seismo.plot(self.time,
                                      self.response,
@@ -114,7 +115,7 @@ class Seismograph(pg.PlotWidget):
             self.seisPlot.append(self.seisBuffer)
         '''
         self.timeBuffer.append(time.time())
-        self.responseBuffer.append(randint(20,40))
+        self.responseBuffer.append(self.Geo.chanVoltage)
         
         if len(self.responseBuffer) >= (self.updateTime/self.sampleTime):
             if len(self.time) < self.secondsInDay:
