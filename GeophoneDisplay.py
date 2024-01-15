@@ -95,6 +95,7 @@ class GeophoneDisplay(QMainWindow):
         self.sampleTimeLineEdit = QLineEdit()
         self.sampleTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
+        self.sampleTimeLineEdit.setText(str(self.Seismo.sampleTime/1000))
 
         self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
         self.sampleTimeLayout.addWidget(self.sampleTimeLineEdit)
@@ -106,7 +107,8 @@ class GeophoneDisplay(QMainWindow):
         self.updateTimeLineEdit = QLineEdit()
         self.updateTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChange)
-        
+        self.updateTimeLineEdit.setText(str(self.Seismo.updateTime/1000))
+
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
 
