@@ -56,7 +56,8 @@ class Seismograph(pg.PlotWidget):
         self.seismo.setLabel('bottom', f'Time (s)', **styles)
         self.seismo.addLegend()
         self.seismo.showGrid(x=True, y=False)
-        self.seismo.setYRange(0.256, -1*0.256)
+        #self.seismo.setYRange(0.256, -1*0.256)
+        self.seismo.setYRange(0.1, -0.1)
 
         self.line = self.seismo.plot(self.time,
                                      self.response,
