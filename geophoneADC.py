@@ -33,7 +33,7 @@
 ##########################################################
 
 import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x14.analog_in import AnalogIn
+from adafruit_ads1x15.analog_in import AnalogIn
 import board
 import busio
 import pigpio
@@ -46,7 +46,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 ads = ADS.ADS1115(i2c)
 # Think we can anticipate very low signals
 ads.gain = 16
-chan = AnalogIn(ads, ADS.P1)
+chan = AnalogIn(ads, ADS.P0)
 
 while (True):
-    print(f'voltage reading : {chan.voltage}mV)
+    print(f'voltage reading : {chan.voltage}mV')

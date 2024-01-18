@@ -32,7 +32,7 @@
 ##########################################################
 
 import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x14.analog_in import AnalogIn
+from adafruit_ads1x15.analog_in import AnalogIn
 import board
 import busio
 import time
@@ -42,30 +42,34 @@ import time
 
 class Geophone():
 
-    def __init__():
-        
+    def __init__(self, gain=16):
+        self.adsGain = gain
         self.init_gadc()
-        self._conversion = 1 #mV
+        self.unitConversion = 1 #mV
 
 
     def init_gadc(self):
-        
         i2c = busio.I2C(board.SCL, board.SDA)
         self.ads = ADS.ADS1115(i2c)
-        self.chan = AnalogIn(ads, ADS.P1)
+        self.ads.gain = self.adsGain
+        self.chan = AnalogIn(self.ads, ADS.P0)
     
     @property
-    def _validGains(self) -> tuple[float, int, int, int, int, int]:
-        return {2/3, 1, 2, 4, 8, 16}
+    def validGains(self) -> tuple[str, ...]:
+        return {'2/3', '1', '2', '4', '8', '16'}
 
     @property
-    def adcGain(self) -> int:
+    def gainRange(self) -> tuple[int, ...]:
+        return {6.144, 4.096, 2.048, 1.024, 0.512, 0.256}
+
+    @property
+    def adsGain(self) -> int:
         return self._gain
 
     @adsGain.setter
     def adsGain(self, value: int):
-        if value not in self.validGains:
-            raise ValueError(f'Gain value must be one of the following: {VALID_GAINS}')
+        if str(value) not in self.validGains:
+            raise ValueError(f'Gain value must be one of the following: {self.validGains}')
         else:
             self._gain = value
 

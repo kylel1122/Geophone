@@ -19,17 +19,17 @@
 #   NOTE:
 ##########################################################
 
-#import Geophone
+from Geophone import Geophone
 from PyQt5.QtWidgets import QApplication, QComboBox, QCheckBox, QVBoxLayout, QHBoxLayout, QLineEdit, QMainWindow, QLabel, QPushButton, QWidget, QSpacerItem, QSizePolicy
 from PyQt5 import QtCore, QtWidgets
 from Seismograph import Seismograph
 
 class GeophoneDisplay(QMainWindow):
 
-    def __init__(self, mode=0, accessibility=True, parent=None):
+    def __init__(self, mode=1, accessibility=True, parent=None):
         super(GeophoneDisplay, self).__init__(parent)
         self.Seismo = Seismograph()
-        #self.geo = Geophone()
+        self.Geo = Geophone()
         
         # Found a problem with using QMainWindow. It already has its own 
         # layout embedded within, and so we need to create a widget and
@@ -95,6 +95,7 @@ class GeophoneDisplay(QMainWindow):
         self.sampleTimeLineEdit = QLineEdit()
         self.sampleTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.sampleTimeLineEdit.returnPressed.connect(self.sampleTimeChange)
+        self.sampleTimeLineEdit.setText(str(self.Seismo.sampleTime/1000))
 
         self.sampleTimeLayout.addWidget(self.sampleTimeLabel)
         self.sampleTimeLayout.addWidget(self.sampleTimeLineEdit)
@@ -106,7 +107,8 @@ class GeophoneDisplay(QMainWindow):
         self.updateTimeLineEdit = QLineEdit()
         self.updateTimeLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.updateTimeLineEdit.returnPressed.connect(self.updateTimeChange)
-        
+        self.updateTimeLineEdit.setText(str(self.Seismo.updateTime/1000))
+
         self.updateTimeLayout.addWidget(self.updateTimeLabel)
         self.updateTimeLayout.addWidget(self.updateTimeLineEdit)
 
@@ -135,6 +137,8 @@ class GeophoneDisplay(QMainWindow):
         self.gainLabel.setAlignment(QtCore.Qt.AlignCenter)
         if self.mode == 0:
             gains = ['1', '2','3','4','5']
+        else:
+            gains = list(self.Geo.validGains)
         self.gainCombo = QComboBox()
         #self.gainCombo.addItems(list(self.geo.validGains))
         self.gainCombo.addItems(gains)
